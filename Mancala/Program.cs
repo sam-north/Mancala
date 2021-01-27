@@ -11,7 +11,6 @@ namespace Mancala
         private static Player player1;
         private static Player player2;
 
-
         static void Main(string[] args)
         {
             Print("Mancala");
@@ -69,7 +68,7 @@ namespace Mancala
         private static bool CheckForEndOfGame()
         {
             var player1PossibleMoves = GetPlayerPossibleSpotsToMove(player1);
-            if (player1PossibleMoves.Count == 0)
+            if (!player1PossibleMoves.Any())
             {
                 for (int i = 0; i < 6; i++)
                 {
@@ -80,12 +79,12 @@ namespace Mancala
             }
 
             var player2PossibleMoves = GetPlayerPossibleSpotsToMove(player2);
-            if (player2PossibleMoves.Count == 0)
+            if (!player2PossibleMoves.Any())
             {
 
                 for (int i = 0; i < 6; i++)
                 {
-                    player1.Board[6] += player2.Board[i];
+                    player1.Board[6] += player1.Board[i];
                     player1.Board[i] = 0;
                 }
                 return false;
@@ -119,12 +118,13 @@ namespace Mancala
                 {
                     if (targetCurrentPlayerBoard)
                     {
-                        if (currentPlayer.Board[currentTargetIndex] == 0 && currentMarblesToMove == 1 && opponentPlayer.Board[5 - currentTargetIndex] > 0)
+                        var opponentIndex = 5 - currentTargetIndex;
+                        if (currentPlayer.Board[currentTargetIndex] == 0 && currentMarblesToMove == 1 && opponentPlayer.Board[opponentIndex] > 0)
                         {
                             currentPlayer.Board[6] += currentMarblesToMove;
                             currentMarblesToMove -= 1;
-                            currentPlayer.Board[6] += opponentPlayer.Board[6 - currentTargetIndex];
-                            opponentPlayer.Board[6 - currentTargetIndex] = 0;
+                            currentPlayer.Board[6] += opponentPlayer.Board[opponentIndex];
+                            opponentPlayer.Board[opponentIndex] = 0;
                         }
                         else
                         {
@@ -160,15 +160,11 @@ namespace Mancala
         private static string Prompt(string promptThis)
         {
             string input = "";
-            //check to see if they put anything in
             while (input.Trim().Length <= 0)
             {
-                //tell them to put something in.
                 Print(promptThis);
-                //let them input something
                 input = Console.ReadLine();
             }
-            //return the something
             return input;
         }
 
